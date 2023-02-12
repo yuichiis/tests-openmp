@@ -42,16 +42,16 @@ double test2(int num_steps) {
 
 int main(int argc, char* argv[]) {
    double   d;
-   int n = 100000000;
+   int n = 1000000;
 
    if (argc > 1)
       n = atoi(argv[1]);
 
    dwStart = GetTickCount();
    d = test2(n);
-   printf_s("For %d steps, pi = %.15f, %d milliseconds\n", n, d, GetTickCount() - dwStart);
+   printf("For %d steps, pi = %.15f, %d milliseconds\n", n, d, GetTickCount() - dwStart);
 
    dwStart = GetTickCount();
    d = test2(n);
-   printf_s("For %d steps, pi = %.15f, %d milliseconds\n", n, d, GetTickCount() - dwStart);
+   printf("For %d steps, pi = %.15f, %d milliseconds\n", n, d, GetTickCount() - dwStart);
 }
