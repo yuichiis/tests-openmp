@@ -42,7 +42,7 @@ double test2(int num_steps) {
 
 int main(int argc, char* argv[]) {
    double   d;
-   int n = 1000000;
+   int n = 100000000;
 
    if (argc > 1)
       n = atoi(argv[1]);
