@@ -8,6 +8,7 @@ volatile DWORD dwStart;
 volatile int global = 0;
 #else
 #include <sys/time.h>
+#include <stdint.h>
 volatile uint64_t dwStart;
 volatile int global = 0;
 /// Returns the number of ticks since an undefined time (usually system startup).
