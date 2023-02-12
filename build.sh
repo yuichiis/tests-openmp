@@ -1,0 +1,1 @@
+ cc -O2 -fopenmp -Wall $*
