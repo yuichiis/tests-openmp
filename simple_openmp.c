@@ -8,6 +8,7 @@ volatile DWORD dwStart;
 volatile int global = 0;
 #else
 #include <sys/time.h>
+#include <time.h>
 #include <stdint.h>
 volatile uint64_t dwStart;
 volatile int global = 0;
