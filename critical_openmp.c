@@ -13,6 +13,9 @@ int main()
     double Min=INFINITY;
     int LoopNum = DATA_SIZE;
     double Data[DATA_SIZE];
+
+    printf("num threads=%d\n",omp_get_num_threads());
+    printf("max threads=%d\n",omp_get_max_threads());
     for(int i=0;i<LoopNum; i++) {
         Data[i] = (double)i;
     }
