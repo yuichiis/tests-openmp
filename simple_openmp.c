@@ -1,5 +1,7 @@
 // simple_openmp.cpp
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #if _MSC_VER
