@@ -1,1 +1,1 @@
- cc -O3 -fopenmp -Wall $*
+ cc -O2 -fopenmp -Wall $*

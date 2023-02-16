@@ -56,4 +56,5 @@ int main(int argc, char* argv[]) {
    dwStart = GetTickCount();
    d = test2(n);
    printf("For %d steps, pi = %.15f, %ld milliseconds\n", n, d, GetTickCount() - dwStart);
+   printf("core dump check");
 }
