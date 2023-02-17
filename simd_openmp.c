@@ -25,9 +25,10 @@ static uint64_t GetTickCount()
 #endif
 
 
-#define DATA_SIZE 10000000
-float data[DATA_SIZE];
-float data[DATA_SIZE];
+#define ROWS 10000
+#define COLS 10000
+float data1[ROWS*COLS];
+float data2[COLS];
 
 
 
@@ -39,11 +40,33 @@ extern void test_vect(long n, float *vec, float a) {
     }
 }
 
-extern void test_simd(long n, float *vec, float a) {
+extern void test_simd(long n, float *x, float a, float *y) {
     int i;
-    #pragma omp simd
     for(i=0;i<n;i++) {
-        vec[i] += a * a * 2 + 4;
+        x[i] += a * y[i];
+    }
+}
+
+extern void test_complex(long m, long n, float *x, float a, float *y) {
+    int i;
+    #pragma omp parallel for
+    for(i=0;i<m;i++) {
+        test_simd(n,&x[i*n],a,y);
+    }
+}
+
+static void test_simd2(long n, float *x, float a, float *y) {
+    int i;
+    for(i=0;i<n;i++) {
+        x[i] += a * y[i];
+    }
+}
+
+extern void test_complex2(long m, long n, float *x, float a, float *y) {
+    int i;
+    #pragma omp parallel for
+    for(i=0;i<m;i++) {
+        test_simd2(n,&x[i*n],a,y);
     }
 }
 
@@ -52,19 +75,38 @@ int main()
     /* code */
     float a = 1.0;
 
+#ifdef _OPENMP
     printf("num threads=%d\n",omp_get_num_threads());
     printf("max threads=%d\n",omp_get_max_threads());
+#endif
 
-    for(int i=0;i<DATA_SIZE; i++) {
-        data[i] = (float)i;
+    printf("init data1\n");
+    for(int i=0;i<ROWS*COLS; i++) {
+        data1[i] = (float)i/1000;
+    }
+    printf("init data2\n");
+    for(int i=0;i<COLS; i++) {
+        data2[i] = (float)i/1000;
     }
 
+    printf("start test_vect\n");
     dwStart = GetTickCount();
-    test_vect(DATA_SIZE, data, a);
+    test_vect(ROWS*COLS, data1, a);
     printf("%ld milliseconds\n", GetTickCount() - dwStart);
 
+    printf("start test_simd\n");
     dwStart = GetTickCount();
-    test_simd(DATA_SIZE, data, a);
+    test_simd(COLS, data1, a, data2);
+    printf("%ld milliseconds\n", GetTickCount() - dwStart);
+
+    printf("start test_complex\n");
+    dwStart = GetTickCount();
+    test_complex(ROWS, COLS, data1, a, data2);
+    printf("%ld milliseconds\n", GetTickCount() - dwStart);
+
+    printf("start test_complex\n");
+    dwStart = GetTickCount();
+    test_complex2(ROWS, COLS, data1, a, data2);
     printf("%ld milliseconds\n", GetTickCount() - dwStart);
 
     printf("Core dump check");
