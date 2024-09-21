@@ -70,6 +70,25 @@ extern void test_complex2(long m, long n, float *x, float a, float *y) {
     }
 }
 
+extern float s_sum(long n, float *x, long incX)
+{
+    float sum;
+    if(incX==1) {
+        long i;
+        #pragma omp simd reduction(+:sum)
+        for(i=0; i<n; i++) {
+            sum += x[i];
+        }
+    } else {
+        long i;
+        #pragma omp parallel for reduction(+:sum)
+        for(i=0; i<n; i++) {
+            sum += x[i*incX];
+        }
+    }
+    return sum;
+}
+
 int main()
 {
     /* code */
@@ -107,6 +126,11 @@ int main()
     printf("start test_complex\n");
     dwStart = GetTickCount();
     test_complex2(ROWS, COLS, data1, a, data2);
+    printf("%ld milliseconds\n", GetTickCount() - dwStart);
+
+    printf("start test_complex\n");
+    dwStart = GetTickCount();
+    float r = s_sum(ROWS*COLS, data1, 1);
     printf("%ld milliseconds\n", GetTickCount() - dwStart);
 
     printf("Core dump check");
